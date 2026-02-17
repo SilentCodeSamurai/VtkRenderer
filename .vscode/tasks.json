@@ -65,16 +65,20 @@
             }
         },
         {
-            "label": "Clean Build",
+            "label": "CPack",
             "type": "shell",
-            "command": "C:/msys64/ucrt64/bin/cmake.exe",
+            "command": "C:/msys64/ucrt64/bin/cpack.exe",
             "args": [
-                "--build",
-                "${workspaceFolder}/build",
-                "--target",
-                "clean"
+                "-G",
+                "WIX",
+                "-C",
+                "Release"
             ],
             "group": "build",
+            "dependsOn": [
+                "CMake Configure",
+                "CMake Build"
+            ],
             "presentation": {
                 "echo": true,
                 "reveal": "always",
@@ -85,7 +89,7 @@
             },
             "problemMatcher": [],
             "options": {
-                "cwd": "${workspaceFolder}"
+                "cwd": "${workspaceFolder}/build"
             }
         }
     ]

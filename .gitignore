@@ -56,4 +56,9 @@ Thumbs.db
 Desktop.ini
 .DS_Store
 
+# Local WiX toolchain binaries (installed per-machine/per-workspace)
+/wix/bin/
 
+# cache
+.cache/
+cache/
