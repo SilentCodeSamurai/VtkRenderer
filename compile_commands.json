@@ -1,0 +1,14 @@
+[
+{
+  "directory": "C:/proj/VtkRenderer/build",
+  "command": "C:\\msys64\\mingw64\\bin\\g++.exe -DKISSFFT_DLL_IMPORT=1 -DMINGW_HAS_SECURE_API=1 -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NO_DEBUG -DQT_OPENGLWIDGETS_LIB -DQT_OPENGL_LIB -DQT_WIDGETS_LIB -DUNICODE -DWIN32 -DWIN64 -DWINVER=0x0A00 -D_ENABLE_EXTENDED_ALIGNED_STORAGE -D_UNICODE -D_WIN32_WINNT=0x0A00 -D_WIN64 -Dkiss_fft_scalar=double @CMakeFiles/VtkRenderer.dir/includes_CXX.rsp -std=gnu++17 -fopenmp -o CMakeFiles\\VtkRenderer.dir\\VtkRenderer_autogen\\mocs_compilation.cpp.obj -c C:\\proj\\VtkRenderer\\build\\VtkRenderer_autogen\\mocs_compilation.cpp",
+  "file": "C:/proj/VtkRenderer/build/VtkRenderer_autogen/mocs_compilation.cpp",
+  "output": "CMakeFiles/VtkRenderer.dir/VtkRenderer_autogen/mocs_compilation.cpp.obj"
+},
+{
+  "directory": "C:/proj/VtkRenderer/build",
+  "command": "C:\\msys64\\mingw64\\bin\\g++.exe -DKISSFFT_DLL_IMPORT=1 -DMINGW_HAS_SECURE_API=1 -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NO_DEBUG -DQT_OPENGLWIDGETS_LIB -DQT_OPENGL_LIB -DQT_WIDGETS_LIB -DUNICODE -DWIN32 -DWIN64 -DWINVER=0x0A00 -D_ENABLE_EXTENDED_ALIGNED_STORAGE -D_UNICODE -D_WIN32_WINNT=0x0A00 -D_WIN64 -Dkiss_fft_scalar=double @CMakeFiles/VtkRenderer.dir/includes_CXX.rsp -std=gnu++17 -fopenmp -o CMakeFiles\\VtkRenderer.dir\\src\\main.cpp.obj -c C:\\proj\\VtkRenderer\\src\\main.cpp",
+  "file": "C:/proj/VtkRenderer/src/main.cpp",
+  "output": "CMakeFiles/VtkRenderer.dir/src/main.cpp.obj"
+}
+]

@@ -1,0 +1,59 @@
+# Build directories
+/build/
+/out/
+
+# CMake generated files
+CMakeCache.txt
+CMakeFiles/
+cmake_install.cmake
+CTestTestfile.cmake
+Makefile
+install_manifest.txt
+
+# Binaries
+*.exe
+*.dll
+*.lib
+*.a
+*.so
+*.dylib
+
+# Object and intermediate files
+*.obj
+*.o
+*.pch
+*.pdb
+*.idb
+
+# Qt / moc / uic / rcc generated
+*_autogen/
+*.moc
+moc_*.cpp
+ui_*.h
+qrc_*.cpp
+
+# IDE/Editor
+.vs/
+*.VC.db
+*.VC.VC.opendb
+*.user
+*.suo
+*.opensdf
+*.sdf
+
+.idea/
+*.iml
+
+.vscode/*
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/c_cpp_properties.json
+!.vscode/settings.json
+
+# OS junk
+*.log
+Thumbs.db
+Desktop.ini
+.DS_Store
+
+

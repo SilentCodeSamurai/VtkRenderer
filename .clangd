@@ -1,0 +1,9 @@
+CompileFlags:
+  CompilationDatabase: build
+  Compiler: C:/msys64/ucrt64/bin/g++.exe
+  Add:
+    - -std=c++17
+Diagnostics:
+  UnusedIncludes: None
+  MissingIncludes: None
+
