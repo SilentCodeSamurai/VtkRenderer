@@ -11,7 +11,19 @@ if(NOT DEFINED OBJDUMP_COMMAND OR OBJDUMP_COMMAND STREQUAL "")
     set(OBJDUMP_COMMAND objdump)
 endif()
 
+# Be robust to accidentally quoted -DVAR="value" arguments.
+foreach(_path_var IN ITEMS APP_EXE APP_BIN_DIR MSYS2_BIN_DIR OBJDUMP_COMMAND)
+    string(REGEX REPLACE "^\"(.*)\"$" "\\1" ${_path_var} "${${_path_var}}")
+endforeach()
+
 set(_queue "${APP_EXE}")
+
+# Scan all deployed root DLLs too. They may have their own transitive runtime
+# dependencies that are not visible directly from APP_EXE imports.
+file(GLOB _bin_root_dlls "${APP_BIN_DIR}/*.dll")
+foreach(_bin_root_dll IN LISTS _bin_root_dlls)
+    list(APPEND _queue "${_bin_root_dll}")
+endforeach()
 
 # Also scan deployed plugin DLLs because they are loaded dynamically by Qt.
 file(GLOB_RECURSE _plugin_dlls "${APP_BIN_DIR}/*/*.dll")

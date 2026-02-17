@@ -121,30 +121,42 @@ add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
     VERBATIM
 )
 
-# Resolve remaining transitive MinGW runtime closure from MSYS2 bin.
-add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
-    COMMAND ${CMAKE_COMMAND}
-        -DAPP_EXE="$<TARGET_FILE:${PROJECT_NAME}>"
-        -DAPP_BIN_DIR="${BIN_OUTPUT}"
-        -DMSYS2_BIN_DIR="${MSYS2_BIN_PATH}"
-        -DOBJDUMP_COMMAND="${CMAKE_OBJDUMP}"
-        -P "${MSYS2_RUNTIME_SCAN_SCRIPT}"
-    COMMENT "Resolving transitive MinGW runtime dependencies..."
-    VERBATIM
+# Some dependencies are delay-loaded or not reliably discovered by deploy tools
+# across environments. Keep an explicit safety net for critical MinGW/GLib runtimes.
+foreach(_extra_runtime_dll IN ITEMS
+    "libgcc_s_seh-1.dll"
+    "libstdc++-6.dll"
+    "libwinpthread-1.dll"
+    "libgomp-1.dll"
+    "libdouble-conversion.dll"
+    "libffi-8.dll"
+    "libgmodule-2.0-0.dll"
+    "libsharpyuv-0.dll"
 )
-
-# GLib can load some modules lazily; keep these explicit safety-net DLLs.
-foreach(_extra_glib_dll IN ITEMS "libffi-8.dll" "libgmodule-2.0-0.dll")
-    if(EXISTS "${MSYS2_BIN_PATH}/${_extra_glib_dll}")
+    if(EXISTS "${MSYS2_BIN_PATH}/${_extra_runtime_dll}")
         add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
             COMMAND ${CMAKE_COMMAND} -E copy_if_different
-                "${MSYS2_BIN_PATH}/${_extra_glib_dll}"
+                "${MSYS2_BIN_PATH}/${_extra_runtime_dll}"
                 "${BIN_OUTPUT}/"
-            COMMENT "Copying ${_extra_glib_dll}..."
+            COMMENT "Copying ${_extra_runtime_dll}..."
             VERBATIM
         )
     endif()
 endforeach()
+
+# Resolve remaining transitive MinGW runtime closure from MSYS2 bin.
+# Keep this pass after explicit safety-net copies so their own transitive deps
+# are discovered in the same run.
+add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
+    COMMAND ${CMAKE_COMMAND}
+        -DAPP_EXE=$<TARGET_FILE:${PROJECT_NAME}>
+        -DAPP_BIN_DIR=${BIN_OUTPUT}
+        -DMSYS2_BIN_DIR=${MSYS2_BIN_PATH}
+        -DOBJDUMP_COMMAND=${CMAKE_OBJDUMP}
+        -P "${MSYS2_RUNTIME_SCAN_SCRIPT}"
+    COMMENT "Resolving transitive MinGW runtime dependencies..."
+    VERBATIM
+)
 
 # --- Install + MSI packaging (WiX) ---
 # Package the already deployed runtime payload from build/bin.
@@ -160,6 +172,8 @@ set(CPACK_GENERATOR "WIX")
 set(CPACK_PACKAGE_FILE_NAME "${PROJECT_NAME}-${PROJECT_VERSION}-win64-installer")
 set(CPACK_INSTALL_CMAKE_PROJECTS "${CMAKE_BINARY_DIR};${PROJECT_NAME};ALL;/")
 set(CPACK_WIX_ROOT "${CMAKE_SOURCE_DIR}/wix/bin/wix311")
+# Keep this GUID stable across releases so MSI upgrades work as expected.
+set(CPACK_WIX_UPGRADE_GUID "D36F0E02-6AFE-49F3-B427-EF8D026C6A70")
 set(CPACK_WIX_UI_REF "WixUI_InstallDir")
 set(CPACK_WIX_PRODUCT_ICON "${CMAKE_SOURCE_DIR}/assets/icon.ico")
 set(CPACK_WIX_PROGRAM_MENU_FOLDER "${PROJECT_NAME}")
