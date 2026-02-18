@@ -1,6 +1,7 @@
 ﻿#ifndef VTU_MODEL_LOADER_H
 #define VTU_MODEL_LOADER_H
 
+#include <QObject>
 #include <QString>
 
 #include <vtkSmartPointer.h>
@@ -9,22 +10,32 @@
 #include <string>
 #include <vector>
 
-struct FieldArrayInfo {
-    std::string name;
-    int components = 0;
-};
+#include "NestedArrayInfo.h"
 
 struct LoadedVtuModel {
-    vtkSmartPointer<vtkUnstructuredGrid> grid;
-    std::vector<FieldArrayInfo> pointArrays;
+  QString fileName;
+  QString filePath;
+  vtkSmartPointer<vtkUnstructuredGrid> grid;
+  QVector<NestedArrayInfo> pointArrays;
 };
 
-class VtuModelLoader {
+class VtuModelLoader : public QObject {
+  Q_OBJECT
+
 public:
-    static bool load(
-        const QString &filePath,
-        LoadedVtuModel *outModel,
-        QString *errorMessage = nullptr);
+  explicit VtuModelLoader(QObject *parent = nullptr);
+  void load(const QString &filePath);
+
+  // Helper functions for component index mapping and name retrieval
+  // These work with the componentNames structure created by load()
+  static int comboIndexToVtkIndex(const NestedArrayInfo &array, int comboIndex);
+  static int vtkIndexToComboIndex(const NestedArrayInfo &array, int vtkIndex);
+  static QString getDisplayNameForVtkIndex(const NestedArrayInfo &array, int vtkIndex);
+  static bool hasMagnitudeOption(const NestedArrayInfo &array);
+
+signals:
+  void modelLoaded(const LoadedVtuModel &model);
+  void modelLoadingErrorOccured(const QString &errorMessage);
 };
 
 #endif

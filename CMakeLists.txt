@@ -46,21 +46,21 @@ set(VTK_COMPONENT_TARGETS
 
 # Sources.
 set(SOURCES
+    src/NestedArrayInfo.cpp
     src/Main.cpp
     src/App.cpp
     src/VtuModelLoader.cpp
-    src/ModelManager.cpp
     src/AppIcon.rc
     assets/resources.qrc
-    src/widgets/ComponentSelectorWidget/ComponentSelectorWidget.cpp
+    src/widgets/NestedSelectorWidget/NestedSelectorWidget.cpp
     src/widgets/FilePickerWidget/FilePickerWidget.cpp
 )
 
 set(HEADERS
+    src/NestedArrayInfo.h
     src/App.h
     src/VtuModelLoader.h
-    src/ModelManager.h
-    src/widgets/ComponentSelectorWidget/ComponentSelectorWidget.h
+    src/widgets/NestedSelectorWidget/NestedSelectorWidget.h
     src/widgets/FilePickerWidget/FilePickerWidget.h
 )
 
