@@ -49,15 +49,19 @@ set(SOURCES
     src/Main.cpp
     src/App.cpp
     src/VtuModelLoader.cpp
-    src/ColoringController.cpp
+    src/ModelManager.cpp
     src/AppIcon.rc
     assets/resources.qrc
+    src/widgets/ComponentSelectorWidget/ComponentSelectorWidget.cpp
+    src/widgets/FilePickerWidget/FilePickerWidget.cpp
 )
 
 set(HEADERS
     src/App.h
     src/VtuModelLoader.h
-    src/ColoringController.h
+    src/ModelManager.h
+    src/widgets/ComponentSelectorWidget/ComponentSelectorWidget.h
+    src/widgets/FilePickerWidget/FilePickerWidget.h
 )
 
 # Build a GUI subsystem executable (no console window).

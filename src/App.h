@@ -2,49 +2,53 @@
 #define APP_H
 
 #include <QMainWindow>
-#include <QString>
-
 #include <vtkSmartPointer.h>
+#include <vtkActor.h>
+#include <vtkDataSetMapper.h>
+#include <vtkRenderer.h>
+#include <vtkScalarBarActor.h>
 
-#include "ColoringController.h"
-#include "VtuModelLoader.h"
+#include "ModelManager.h"
+#include "widgets/ComponentSelectorWidget/ComponentSelectorWidget.h"
+#include "widgets/FilePickerWidget/FilePickerWidget.h"
 
-class QLabel;
-class QComboBox;
-class QPushButton;
 class QVTKOpenGLNativeWidget;
 
-class vtkActor;
-class vtkDataSetMapper;
-class vtkRenderer;
-class vtkScalarBarActor;
-class vtkUnstructuredGrid;
+class App : public QMainWindow
+{
+    Q_OBJECT
 
-class App : public QMainWindow {
 public:
     explicit App(const QString &vtuFilePath = QString(), QWidget *parent = nullptr);
 
-private:
-    void clearLoadedData();
-    void setNoFileState();
-    void loadFromPath(const QString &filePath);
-    void openFile();
-    void closeFile();
-    void updateComponentChoices(int arrayIndex);
-    void applyColorSelection();
+private slots:
+    void onModelLoaded();
+    void onModelCleared();
+    void onSelectionChanged(int arrayIndex, int componentIndex);
+    void onFilePickerError(const QString &message);
+    void onModelError(const QString &message);
 
-    QVTKOpenGLNativeWidget *vtkWidget_ = nullptr;
-    QLabel *fileLabel_ = nullptr;
-    QComboBox *arrayCombo_ = nullptr;
-    QComboBox *componentCombo_ = nullptr;
-    QPushButton *openFileButton_ = nullptr;
-    QPushButton *closeFileButton_ = nullptr;
-    vtkSmartPointer<vtkDataSetMapper> mapper_;
-    vtkSmartPointer<vtkActor> actor_;
-    vtkSmartPointer<vtkRenderer> renderer_;
-    vtkSmartPointer<vtkScalarBarActor> scalarBar_;
-    VtuModelLoader modelLoader_;
-    ColoringController coloringController_{nullptr, nullptr};
+private:
+    void setupVtk();
+    void setupUi();
+    void setupConnections();
+    void requestRender();
+    void showSelectionError(const QString &message);
+
+private:
+    // UI Components
+    FilePickerWidget *m_filePicker;
+    ComponentSelectorWidget *m_selector;
+    QVTKOpenGLNativeWidget *m_vtkWidget;
+
+    // VTK Components
+    vtkSmartPointer<vtkRenderer> m_renderer;
+    vtkSmartPointer<vtkActor> m_actor;
+    vtkSmartPointer<vtkDataSetMapper> m_mapper;
+    vtkSmartPointer<vtkScalarBarActor> m_scalarBar;
+
+    // Model state
+    ModelManager m_modelManager;
 };
 
-#endif
+#endif // APP_H

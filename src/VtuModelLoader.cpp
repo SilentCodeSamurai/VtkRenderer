@@ -6,8 +6,19 @@
 #include <vtkUnstructuredGrid.h>
 #include <vtkXMLUnstructuredGridReader.h>
 
-bool VtuModelLoader::load(const QString &filePath, QString *errorMessage) {
-    clear();
+bool VtuModelLoader::load(
+    const QString &filePath,
+    LoadedVtuModel *outModel,
+    QString *errorMessage) {
+    if (outModel == nullptr) {
+        if (errorMessage != nullptr) {
+            *errorMessage = "Internal error: output model pointer is null.";
+        }
+        return false;
+    }
+
+    outModel->grid = nullptr;
+    outModel->pointArrays.clear();
 
     vtkNew<vtkXMLUnstructuredGridReader> reader;
     reader->SetFileName(filePath.toStdString().c_str());
@@ -21,24 +32,19 @@ bool VtuModelLoader::load(const QString &filePath, QString *errorMessage) {
         return false;
     }
 
-    grid_ = vtkSmartPointer<vtkUnstructuredGrid>::New();
-    grid_->ShallowCopy(output);
+    outModel->grid = vtkSmartPointer<vtkUnstructuredGrid>::New();
+    outModel->grid->ShallowCopy(output);
 
-    vtkPointData *pointData = grid_->GetPointData();
+    vtkPointData *pointData = outModel->grid->GetPointData();
     if (pointData != nullptr) {
         for (int i = 0; i < pointData->GetNumberOfArrays(); ++i) {
             vtkDataArray *arr = pointData->GetArray(i);
             if (arr == nullptr || arr->GetName() == nullptr) {
                 continue;
             }
-            pointArrays_.push_back({arr->GetName(), arr->GetNumberOfComponents()});
+            outModel->pointArrays.push_back({arr->GetName(), arr->GetNumberOfComponents()});
         }
     }
 
     return true;
-}
-
-void VtuModelLoader::clear() {
-    grid_ = nullptr;
-    pointArrays_.clear();
 }

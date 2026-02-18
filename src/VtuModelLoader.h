@@ -14,17 +14,17 @@ struct FieldArrayInfo {
     int components = 0;
 };
 
+struct LoadedVtuModel {
+    vtkSmartPointer<vtkUnstructuredGrid> grid;
+    std::vector<FieldArrayInfo> pointArrays;
+};
+
 class VtuModelLoader {
 public:
-    bool load(const QString &filePath, QString *errorMessage = nullptr);
-    void clear();
-
-    vtkUnstructuredGrid *grid() const { return grid_; }
-    const std::vector<FieldArrayInfo> &pointArrays() const { return pointArrays_; }
-
-private:
-    vtkSmartPointer<vtkUnstructuredGrid> grid_;
-    std::vector<FieldArrayInfo> pointArrays_;
+    static bool load(
+        const QString &filePath,
+        LoadedVtuModel *outModel,
+        QString *errorMessage = nullptr);
 };
 
 #endif
