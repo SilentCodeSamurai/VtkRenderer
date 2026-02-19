@@ -46,22 +46,18 @@ set(VTK_COMPONENT_TARGETS
 
 # Sources.
 set(SOURCES
-    src/NestedArrayInfo.cpp
+    src/PointArrayInfo.cpp
     src/Main.cpp
-    src/App.cpp
+    src/MainWindow.cpp
     src/VtuModelLoader.cpp
     src/AppIcon.rc
     assets/resources.qrc
-    src/widgets/NestedSelectorWidget/NestedSelectorWidget.cpp
-    src/widgets/FilePickerWidget/FilePickerWidget.cpp
 )
 
 set(HEADERS
-    src/NestedArrayInfo.h
-    src/App.h
+    src/PointArrayInfo.h
+    src/MainWindow.h
     src/VtuModelLoader.h
-    src/widgets/NestedSelectorWidget/NestedSelectorWidget.h
-    src/widgets/FilePickerWidget/FilePickerWidget.h
 )
 
 # Build a GUI subsystem executable (no console window).

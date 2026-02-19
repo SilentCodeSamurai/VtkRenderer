@@ -10,13 +10,11 @@
 #include <string>
 #include <vector>
 
-#include "NestedArrayInfo.h"
+#include "PointArrayInfo.h"
 
 struct LoadedVtuModel {
-  QString fileName;
-  QString filePath;
   vtkSmartPointer<vtkUnstructuredGrid> grid;
-  QVector<NestedArrayInfo> pointArrays;
+  QVector<PointArrayInfo> pointArraysInfo;
 };
 
 class VtuModelLoader : public QObject {
@@ -28,13 +26,14 @@ public:
 
   // Helper functions for component index mapping and name retrieval
   // These work with the componentNames structure created by load()
-  static int comboIndexToVtkIndex(const NestedArrayInfo &array, int comboIndex);
-  static int vtkIndexToComboIndex(const NestedArrayInfo &array, int vtkIndex);
-  static QString getDisplayNameForVtkIndex(const NestedArrayInfo &array, int vtkIndex);
-  static bool hasMagnitudeOption(const NestedArrayInfo &array);
+  static int comboIndexToVtkIndex(const PointArrayInfo &arrayInfo, int comboIndex);
+  static int vtkIndexToComboIndex(const PointArrayInfo &arrayInfo, int vtkIndex);
+  static QString getDisplayNameForVtkIndex(const PointArrayInfo &arrayInfo,
+                                           int vtkIndex);
+  static bool hasMagnitudeOption(const PointArrayInfo &arrayInfo);
 
 signals:
-  void modelLoaded(const LoadedVtuModel &model);
+  void modelLoaded(LoadedVtuModel *model, const QString &modelFilePath);
   void modelLoadingErrorOccured(const QString &errorMessage);
 };
 
