@@ -2,11 +2,13 @@
 #define MAINWINDOW_H
 
 #include <QComboBox>
+#include <QFileInfo>
 #include <QGroupBox>
 #include <QLabel>
 #include <QMainWindow>
 #include <QPushButton>
-#include <qfileinfo.h>
+#include <QScopedPointer>
+
 #include <vtkActor.h>
 #include <vtkDataSetMapper.h>
 #include <vtkRenderer.h>
@@ -68,13 +70,19 @@ private:
   void closeFile();
 
 private:
+  /* CONFIGURATION */
+  QString fileFilter;
+  QString fileLabelPlaceholderText;
+
+  /* STATE */
+  QScopedPointer<LoadedVtuModel> openedVtuModel;
+  QScopedPointer<QFileInfo> openedVtuModelFileInfo;
+
   /* UI COMPONENTS */
   /* File Picker */
   QLabel *fileLabel;
-  QString fileLabelPlaceholderText;
   QPushButton *openFileButton;
   QPushButton *closeFileButton;
-  QString fileFilter;
 
   /* Array/Component Selector */
   QGroupBox *arrayComponentGroupBox;
@@ -91,10 +99,6 @@ private:
   vtkSmartPointer<vtkActor> modelActor;
   vtkSmartPointer<vtkDataSetMapper> modelMapper;
   vtkSmartPointer<vtkScalarBarActor> scalarBar;
-
-  /* STATE */
-  LoadedVtuModel *openedVtuModel;
-  QFileInfo *openedVtuModelFileInfo;
 
   /* HELPERS */
   VtuModelLoader modelLoader;

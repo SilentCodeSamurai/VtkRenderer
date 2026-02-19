@@ -2,6 +2,7 @@
 
 #include <QFile>
 #include <QMap>
+#include <QScopedPointer.h>
 #include <QXmlStreamReader>
 
 #include <vtkDataArray.h>
@@ -14,7 +15,7 @@ VtuModelLoader::VtuModelLoader(QObject *parent) : QObject(parent) {}
 
 void VtuModelLoader::load(const QString &filePath) {
   // Allocate a new model instance; ownership is transferred to the receiver
-  LoadedVtuModel *outModel = new LoadedVtuModel();
+  QScopedPointer<LoadedVtuModel> outModel(new LoadedVtuModel());
 
   vtkNew<vtkXMLUnstructuredGridReader> reader;
   reader->SetFileName(filePath.toStdString().c_str());
@@ -117,7 +118,7 @@ void VtuModelLoader::load(const QString &filePath) {
     }
   }
 
-  emit modelLoaded(outModel, filePath);
+  emit modelLoaded(outModel.take(), filePath);
 }
 
 // Helper functions for component index mapping and name retrieval

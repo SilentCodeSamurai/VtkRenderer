@@ -28,9 +28,6 @@ MainWindow::MainWindow(const QString &vtuFilePath, QWidget *parent)
 
   if (!vtuFilePath.isEmpty()) {
     modelLoader.load(vtuFilePath);
-  } else {
-    openedVtuModel = nullptr;
-    openedVtuModelFileInfo = nullptr;
   }
 }
 
@@ -360,8 +357,8 @@ void MainWindow::onModelLoaded(LoadedVtuModel *model,
   closeFile();
 
   // Set attributes – MainWindow now owns the model and its file info
-  this->openedVtuModel = model;
-  this->openedVtuModelFileInfo = new QFileInfo(modelFilePath);
+  this->openedVtuModel.reset(model);
+  this->openedVtuModelFileInfo.reset(new QFileInfo(modelFilePath));
 
   // Set initial array and component indices
   int initialArrayIndex = 0;
@@ -681,10 +678,8 @@ void MainWindow::rerenderVtkVisualizer() {
 /* Helpers */
 void MainWindow::closeFile() {
   // Clear attributes
-  delete openedVtuModel;
-  delete openedVtuModelFileInfo;
-  openedVtuModel = nullptr;
-  openedVtuModelFileInfo = nullptr;
+  openedVtuModel.reset(nullptr);
+  openedVtuModelFileInfo.reset(nullptr);
 
   // Update Selector
   clearSelectorComboboxes();
